@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:home_storage/utils/navigator/navigator_app.dart';
 
-import 'conf/configure_nonweb.dart' if (dart.library.html) 'configure_web.dart';
+import 'conf/configure_nonweb.dart' if (dart.library.html) 'conf/configure_web.dart';
 import 'secrets.dart';
 
 FirebaseOptions get firebaseOptions {
@@ -16,11 +16,9 @@ FirebaseOptions get firebaseOptions {
 }
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: firebaseOptions,
   );
   configureApp();
   runApp(NavigatorCustom());
-  FirebaseAuth auth = FirebaseAuth.instance;
 }

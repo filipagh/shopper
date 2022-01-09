@@ -16,7 +16,7 @@ class NavigatorCustom extends StatelessWidget {
       routes: {
         HomeScreen.navUrl: (context) => HomeScreen(),
         LoginScreen.navUrl: (context) => LoginScreen(),
-        RegisterScreen.navUrl: (context) => (RegisterScreen()),
+        RegisterScreen.navUrl: (context) => RegisterScreen(),
       },
       onUnknownRoute: (settings) {
         print("a");

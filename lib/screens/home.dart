@@ -5,7 +5,7 @@ import 'package:home_storage/widgets/menu.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
-  static const navUrl = '/';
+  static const navUrl = '/home';
 
   @override
   Widget build(BuildContext context) {
