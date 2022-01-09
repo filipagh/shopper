@@ -1,0 +1,149 @@
+import 'package:flutter/material.dart';
+import 'configure_nonweb.dart' if (dart.library.html) 'configure_web.dart';
+
+void main() {
+  configureApp();
+  runApp(Nav2App());
+}
+class Path {
+  const Path(this.pattern, this.builder);
+
+  final String pattern;
+  final Widget Function(BuildContext, String) builder;
+}
+
+class Nav2App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomeScreen(),
+        '/xxx': (context) => DetailScreen(id: "NAHRAD",),
+
+      },
+      //iuhuih
+      // routes: {
+      //   // // When navigating to the "/" route, build the FirstScreen widget.
+      //   // '/': (context) => HomeScreen(),
+      //   // // When navigating to the "/second" route, build the SecondScreen widget.
+      //   // r'/xxx/(\d*)': (context,match) => DetailScreen(id: match),
+      // },
+      onGenerateRoute: (RouteSettings settings) {
+        List<Path> paths = [
+          Path(r'^/xxx/(\d*)$',(context, match) => DetailScreen(id: match),),
+        ];
+
+        String myurl = Uri.base.toString();
+
+        for (Path path in paths) {
+          final regExpPattern = RegExp(path.pattern);
+          if (regExpPattern.hasMatch(settings.name!)) {
+            final firstMatch = regExpPattern.firstMatch(settings.name!);
+            final match = (firstMatch!.groupCount == 1) ? firstMatch.group(1) : null;
+            return MaterialPageRoute<void>(
+              builder: (context) => path.builder(context, match!),
+              settings: settings,
+            );
+          }
+        }
+        // If no match is found, [WidgetsApp.onUnknownRoute] handles it.
+        // return null;
+        return MaterialPageRoute(builder: (context) => UnknownScreen());
+
+
+        // // Handle '/'
+        // if (settings.name == '/') {
+        //   return MaterialPageRoute(builder: (context) => HomeScreen(), settings: RouteSettings(name: "/",arguments: ["50"]));
+        // }
+        // RegExp regExpPattern = RegExp(r'/xxx/(\d*)');
+        // var match = regExpPattern.firstMatch(settings.name!);
+        // if (regExpPattern.hasMatch(settings.name!)) {
+        //   return MaterialPageRoute(builder: (context) => DetailScreen(id: "50"), settings: RouteSettings(name: "xxx/50",arguments: "50"));
+        // }
+        //
+        //
+        // // Handle '/details/:id'
+        // var uri = Uri.parse(settings.name!);
+        // if (uri.pathSegments.length == 2 &&
+        //     uri.pathSegments.first == 'details') {
+        //   var id = uri.pathSegments[1];
+        //   return MaterialPageRoute(builder: (context) => DetailScreen(id: id));
+        // }
+        //
+        // return MaterialPageRoute(builder: (context) => UnknownScreen());
+      },
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: FlatButton(
+          child: Text('View Details'),
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              '/xxx/488',
+              arguments: 42
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class DetailScreen extends StatelessWidget {
+  String? id;
+
+  DetailScreen({
+    this.id,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Viewing details for item $id'),
+            FlatButton(
+              child: Text('next!'),
+              onPressed: () {
+                Navigator.pushNamed(
+                    context,
+                    '/xxx/${id! + "1"}'
+                );
+              },
+            ),
+            FlatButton(
+              child: Text('Pop!'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class UnknownScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: Text('404!'),
+      ),
+    );
+  }
+}
