@@ -1,7 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:home_storage/states/auth.dart';
 import 'package:home_storage/utils/navigator/navigator_app.dart';
+import 'package:hooks_riverpod/all.dart';
 
 import 'conf/configure_nonweb.dart' if (dart.library.html) 'conf/configure_web.dart';
 import 'secrets.dart';
@@ -16,9 +17,20 @@ FirebaseOptions get firebaseOptions {
 }
 
 Future<void> main() async {
+  await setupAuthState();
+  configureApp();
+
+  runApp(ProviderScope(child: NavigatorCustom()));
+}
+
+final authProvider = StateNotifierProvider<AuthNotifier, AuthModel>(
+      (ref) => AuthNotifier(),
+);
+
+
+Future<void> setupAuthState() async {
   await Firebase.initializeApp(
     options: firebaseOptions,
   );
-  configureApp();
-  runApp(NavigatorCustom());
 }
+

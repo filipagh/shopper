@@ -4,9 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:home_storage/screens/register.dart';
 import 'package:home_storage/widgets/validator/empty_string_validator.dart';
-import 'package:home_storage/widgets/validator/utils/multy_validator.dart';
-import 'package:home_storage/widgets/validator/utils/validator.dart';
 import 'package:home_storage/widgets/validator/mail_validator.dart';
+import 'package:home_storage/widgets/validator/utils/multy_validator.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -90,11 +89,7 @@ class LoginFormState extends State<LoginForm> {
                               email: mail!, password: password!);
                       // If the form is valid, display a snackbar. In the real world,
                       // you'd often call a server or save the information in a database.
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text(
-                                '${userCredential.user!.uid} Processing Data')),
-                      );
+                      Navigator.of(context).pop();
                     }
                   },
                   child: const Text('Submit'),

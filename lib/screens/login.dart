@@ -11,8 +11,23 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       AlertDialog(
-        title: Text("Login"),
-        content: LoginForm(),
+        title: Row(
+          children: [
+            Text("Login"),
+            Spacer(),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("close"),
+            ),
+          ],
+        ),
+        content: Column(
+          children: [
+            LoginForm(),
+          ],
+        ),
       ),
     ]);
 

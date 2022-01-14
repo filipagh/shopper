@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:home_storage/widgets/app_bar.dart';
 import 'package:home_storage/widgets/menu.dart';
 
 class DetailScreen extends StatelessWidget {
@@ -14,7 +15,7 @@ class DetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: getMenu(context),
-      appBar: AppBar(),
+      appBar: getAppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
