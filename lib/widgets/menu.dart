@@ -17,9 +17,9 @@ Widget getMenu(BuildContext context) {
           child: Text('Drawer Header'),
         ),
         ListTile(
-          title: const Text('Item 1'),
+          title: const Text('All items'),
           onTap: () {  Navigator.pop(context);
-            Navigator.pushNamed(context, '/xxx/1');
+            Navigator.pushNamed(context, '/items');
 // Update the state of the app.
 // ...
           },

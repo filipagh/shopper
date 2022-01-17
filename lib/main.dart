@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:home_storage/states/all_items.dart';
 import 'package:home_storage/states/auth.dart';
 import 'package:home_storage/utils/navigator/navigator_app.dart';
 import 'package:hooks_riverpod/all.dart';
@@ -13,11 +14,13 @@ FirebaseOptions get firebaseOptions {
     apiKey: firebaseApiKey,
     projectId: projectId2,
     messagingSenderId: messagingSenderId2,
+    databaseURL: dbUrl
   );
 }
 
 Future<void> main() async {
   await setupAuthState();
+
   configureApp();
 
   runApp(ProviderScope(child: NavigatorCustom()));
@@ -26,6 +29,12 @@ Future<void> main() async {
 final authProvider = StateNotifierProvider<AuthNotifier, AuthModel>(
       (ref) => AuthNotifier(),
 );
+
+final allItemsProvider = StateNotifierProvider<AllItemsNotifier, AllItemsState>(
+      (ref) => AllItemsNotifier(),
+);
+
+
 
 
 Future<void> setupAuthState() async {

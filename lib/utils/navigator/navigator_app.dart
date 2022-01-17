@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/src/provider.dart';
+import 'package:home_storage/screens/all_items.dart';
 import 'package:home_storage/screens/home.dart';
 import 'package:home_storage/screens/login.dart';
 import 'package:home_storage/screens/register.dart';
@@ -12,6 +13,8 @@ import 'package:home_storage/utils/navigator/route_list.dart';
 import '../../main.dart';
 
 class NavigatorCustom extends StatelessWidget {
+  static GlobalKey<NavigatorState> navigatorKey =
+  GlobalKey<NavigatorState>();
   const NavigatorCustom({Key? key}) : super(key: key);
 
 
@@ -34,14 +37,15 @@ class NavigatorCustom extends StatelessWidget {
     addAuthChangeListener(context);
 
     return MaterialApp(
+      navigatorKey: NavigatorCustom.navigatorKey,
       initialRoute:  HomeScreen.navUrl,
       routes: {
         HomeScreen.navUrl: (context) => HomeScreen(),
         LoginScreen.navUrl: (context) => LoginScreen(),
         RegisterScreen.navUrl: (context) => RegisterScreen(),
+        AllItemsScreen.navUrl: (context) => AllItemsScreen(),
       },
       onGenerateRoute: (RouteSettings settings) {
-        print(settings.name);
         for (RegexCustomPath path in globalRoutes) {
           final regExpPattern = RegExp(path.pattern);
           if (regExpPattern.hasMatch(settings.name!)) {
