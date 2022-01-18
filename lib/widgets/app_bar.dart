@@ -18,7 +18,12 @@ class _customAppBar extends HookWidget implements PreferredSizeWidget {
     return AppBar(
       title: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, HomeScreen.navUrl);
+
+          Route route = ModalRoute.of(context) as Route;
+          final routeName = route.settings.name;
+          if (routeName != HomeScreen.navUrl) {
+            Navigator.pushNamed(context, HomeScreen.navUrl);
+          }
         },
         child: Text("Shopper"),
       ),

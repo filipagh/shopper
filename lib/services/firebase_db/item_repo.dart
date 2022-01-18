@@ -7,9 +7,14 @@ class ItemRepo {
 
   static final DatabaseReference _ref = FirebaseDatabase.instance.ref("/items");
 
-  Future<void> insertShoppItem(ShoppingModel item) async {
+  static Future<void> insertShoppItem(ShoppingModel item) async {
     await _ref.set(jsonEncode(item));
   }
+
+  static void deleteItem(ShoppingModel item) {
+     _ref.child(item.text).remove();
+  }
+
 
   static Stream<DatabaseEvent> getStream() {
     return _ref.onValue;
