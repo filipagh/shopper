@@ -26,13 +26,6 @@ class LoginFormState extends State<LoginForm> {
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
 
-  String? emptyValidator(value, String errorText) {
-    if (value == null || value.isEmpty) {
-      return errorText;
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     String? mail;

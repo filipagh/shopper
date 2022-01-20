@@ -5,6 +5,7 @@ import 'package:home_storage/main.dart';
 import 'package:home_storage/services/firebase_db/item_repo.dart';
 import 'package:home_storage/states/all_items.dart';
 import 'package:home_storage/widgets/app_bar.dart';
+import 'package:home_storage/widgets/form/new_item.dart';
 import 'package:home_storage/widgets/menu.dart';
 import 'package:hooks_riverpod/all.dart';
 
@@ -18,15 +19,38 @@ class AllItemsScreen extends HookWidget {
     AllItemsListener.addListener();
     final allItems = useProvider(allItemsProvider);
 
-
     return Scaffold(
       drawer: getMenu(context),
       appBar: getAppBar(),
-
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Scaffold(
+                  backgroundColor: Colors.transparent,
+                  body: AlertDialog(
+                      title: Row(
+                        children: [
+                          Text("Add new item"),
+                          Spacer(),
+                          GestureDetector(
+                            child: Icon(Icons.close),
+                            onTap: () {Navigator.pop(context);},
+                          )
+                        ],
+                      ), content: NewItemForm()));
+            },
+          );
+        },
+      ),
       body: Center(
         child: Column(
           children: [
-            Text("All Items", textScaleFactor: 3,),
+            Text(
+              "All Items",
+              textScaleFactor: 3,
+            ),
             Divider(),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -43,7 +67,9 @@ class AllItemsScreen extends HookWidget {
                         final item = allItems.items[index];
                         return ListTile(
                           trailing: GestureDetector(
-                              onTap: () {ItemRepo.deleteItem(item);},
+                              onTap: () {
+                                ItemRepo.deleteItem(item);
+                              },
                               child: Icon(Icons.delete)),
                           title: Text(item.text),
                           subtitle: Text(item.text),
