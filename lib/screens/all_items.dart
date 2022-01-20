@@ -67,11 +67,8 @@ class AllItemsScreen extends HookWidget {
               constraints: const BoxConstraints(maxWidth: 300),
               child: Column(
                 children: [
-                  TextField(
-                    onChanged: (text) {
-                      searchQuery.value = text;
-                    },
-                  ),
+                  SearchBar(searchQuery: searchQuery),
+                  const Divider(),
                   ListTileTheme(
                       tileColor: Colors.lightBlueAccent, child: buildList()),
                 ],
@@ -80,6 +77,28 @@ class AllItemsScreen extends HookWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class SearchBar extends StatelessWidget {
+  const SearchBar({
+    Key? key,
+    required this.searchQuery,
+  }) : super(key: key);
+
+  final ValueNotifier<String> searchQuery;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      decoration: const InputDecoration(
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(100))),
+          hintText: "search"),
+      onChanged: (text) {
+        searchQuery.value = text;
+      },
     );
   }
 }
