@@ -12,38 +12,52 @@ import 'package:hooks_riverpod/all.dart';
 class AllItemsScreen extends HookWidget {
   static const navUrl = '/items';
 
-  const AllItemsScreen();
+  final searchQueryState = "";
+
+  const AllItemsScreen({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
+
     AllItemsListener.addListener();
+
     final allItems = useProvider(allItemsProvider);
+    final searchQuery = useState(searchQueryState);
+
+    Widget buildList() {
+      var filteredItems = allItems.items;
+      if (searchQuery.value.isNotEmpty) {
+       final query = searchQuery.value.toLowerCase();
+        filteredItems = filteredItems.where(
+                (element) => element.text.toLowerCase().contains(query))
+            .toList();
+      }
+
+      return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: filteredItems.length,
+        itemBuilder: (context, index) {
+          final item = filteredItems[index];
+          return ListTile(
+            trailing: GestureDetector(
+                onTap: () {
+                  ItemRepo.deleteItem(item);
+                },
+                child: Icon(Icons.delete)),
+            title: Text(item.text),
+            subtitle: Text(item.text),
+          );
+        },
+      );
+    }
+
 
     return Scaffold(
       drawer: getMenu(context),
       appBar: getAppBar(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return Scaffold(
-                  backgroundColor: Colors.transparent,
-                  body: AlertDialog(
-                      title: Row(
-                        children: [
-                          Text("Add new item"),
-                          Spacer(),
-                          GestureDetector(
-                            child: Icon(Icons.close),
-                            onTap: () {Navigator.pop(context);},
-                          )
-                        ],
-                      ), content: NewItemForm()));
-            },
-          );
-        },
-      ),
+      floatingActionButton: FloatAddItemButton(),
       body: Center(
         child: Column(
           children: [
@@ -52,37 +66,53 @@ class AllItemsScreen extends HookWidget {
               textScaleFactor: 3,
             ),
             Divider(),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 300),
-                  child: ListTileTheme(
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 300),
+              child: Column(
+                children: [
+                  TextField(onChanged: (text) {searchQuery.value=text;},),
+                  ListTileTheme(
                     tileColor: Colors.lightBlueAccent,
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: allItems.items.length,
-                      itemBuilder: (context, index) {
-                        final item = allItems.items[index];
-                        return ListTile(
-                          trailing: GestureDetector(
-                              onTap: () {
-                                ItemRepo.deleteItem(item);
-                              },
-                              child: Icon(Icons.delete)),
-                          title: Text(item.text),
-                          subtitle: Text(item.text),
-                        );
-                      },
-                    ),
+                    child: buildList()
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class FloatAddItemButton extends StatelessWidget {
+  const FloatAddItemButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Scaffold(
+                backgroundColor: Colors.transparent,
+                body: AlertDialog(
+                    title: Row(
+                      children: [
+                        Text("Add new item"),
+                        Spacer(),
+                        GestureDetector(
+                          child: Icon(Icons.close),
+                          onTap: () {Navigator.pop(context);},
+                        )
+                      ],
+                    ), content: NewItemForm()));
+          },
+        );
+      },
     );
   }
 }
