@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:home_storage/widgets/form/login.dart';
 import 'package:home_storage/widgets/form/register.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -10,16 +9,12 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: const [
       AlertDialog(
         title: Text("Register"),
         content: RegisterForm(),
       ),
     ]);
 
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(child: LoginForm()),
-    );
   }
 }

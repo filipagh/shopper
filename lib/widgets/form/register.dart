@@ -40,7 +40,6 @@ class RegisterFormState extends State<RegisterForm> {
     TextEditingController b = TextEditingController(text: "");
     String? mail;
     String? password;
-    String? passwordCheck;
     // Build a Form widget using the _formKey created above.
     return Form(
       key: _registerFormKey,
@@ -56,7 +55,7 @@ class RegisterFormState extends State<RegisterForm> {
             },
             validator: (value) {
               return multyValidate(
-                  [MailValidator(value, "enter correct Mail adress")]);
+                  [MailValidator(value, "enter correct Mail address")]);
             },
           ),
           TextFormField(
@@ -100,13 +99,13 @@ class RegisterFormState extends State<RegisterForm> {
                   },
                   child: const Text('Login'),
                 ),
-                Spacer(),
+                const Spacer(),
                 ElevatedButton(
                   onPressed: () async {
                     // Validate returns true if the form is valid, or false otherwise.
                     if (_registerFormKey.currentState!.validate()) {
                       _registerFormKey.currentState!.save();
-                      UserCredential userCredential = await FirebaseAuth
+                      await FirebaseAuth
                           .instance
                           .createUserWithEmailAndPassword(
                               email: mail!, password: password!);

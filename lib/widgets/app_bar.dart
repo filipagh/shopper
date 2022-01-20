@@ -8,24 +8,23 @@ import 'package:home_storage/screens/login.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 PreferredSizeWidget getAppBar() {
-  return _customAppBar();
+  return _CustomAppBar();
 }
 
-class _customAppBar extends HookWidget implements PreferredSizeWidget {
+class _CustomAppBar extends HookWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final authModel = useProvider(authProvider);
     return AppBar(
       title: GestureDetector(
         onTap: () {
-
           Route route = ModalRoute.of(context) as Route;
           final routeName = route.settings.name;
           if (routeName != HomeScreen.navUrl) {
             Navigator.pushNamed(context, HomeScreen.navUrl);
           }
         },
-        child: Text("Shopper"),
+        child: const Text("Shopper"),
       ),
       actions: [
         if (authModel.isLoggedIn) ...[
@@ -34,12 +33,18 @@ class _customAppBar extends HookWidget implements PreferredSizeWidget {
                   onTap: () async {
                     await FirebaseAuth.instance.signOut();
                   },
-                  child: Text(authModel.user!.email! + "\nLOGOUT", textScaleFactor: 2,))),
+                  child: Text(
+                    authModel.user!.email! + "\nLOGOUT",
+                    textScaleFactor: 2,
+                  ))),
         ] else ...[
           Center(
             child: FittedBox(
               child: GestureDetector(
-                  child: Text("login", textScaleFactor: 2,),
+                  child: const Text(
+                    "login",
+                    textScaleFactor: 2,
+                  ),
                   onTap: () {
                     Navigator.pushNamed(context, LoginScreen.navUrl);
                   }),

@@ -14,8 +14,8 @@ class HomeScreen extends StatelessWidget {
       drawer: getMenu(context),
       appBar: getAppBar(),
       body: Center(
-        child: FlatButton(
-          child: Text('View Details'),
+        child: TextButton(
+          child: const Text('View Details'),
           onPressed: () {
             Navigator.pushNamed(context, '/xxx/488');
           },

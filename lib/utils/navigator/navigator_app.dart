@@ -13,37 +13,32 @@ import 'package:home_storage/utils/navigator/route_list.dart';
 import '../../main.dart';
 
 class NavigatorCustom extends StatelessWidget {
-  static GlobalKey<NavigatorState> navigatorKey =
-  GlobalKey<NavigatorState>();
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   const NavigatorCustom({Key? key}) : super(key: key);
 
-
   void addAuthChangeListener(BuildContext context) {
-    FirebaseAuth.instance
-        .userChanges()
-        .listen((User? user) {
+    FirebaseAuth.instance.userChanges().listen((User? user) {
       if (user == null) {
         context.read(authProvider.notifier).logOut();
       } else {
         context.read(authProvider.notifier).changeStatus(user);
-        print('User is signed in!');
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     addAuthChangeListener(context);
 
     return MaterialApp(
       navigatorKey: NavigatorCustom.navigatorKey,
-      initialRoute:  HomeScreen.navUrl,
+      initialRoute: HomeScreen.navUrl,
       routes: {
-        HomeScreen.navUrl: (context) => HomeScreen(),
-        LoginScreen.navUrl: (context) => LoginScreen(),
-        RegisterScreen.navUrl: (context) => RegisterScreen(),
-        AllItemsScreen.navUrl: (context) => AllItemsScreen(),
+        HomeScreen.navUrl: (context) => const HomeScreen(),
+        LoginScreen.navUrl: (context) => const LoginScreen(),
+        RegisterScreen.navUrl: (context) => const RegisterScreen(),
+        AllItemsScreen.navUrl: (context) => const AllItemsScreen(),
       },
       onGenerateRoute: (RouteSettings settings) {
         for (RegexCustomPath path in globalRoutes) {
@@ -60,7 +55,7 @@ class NavigatorCustom extends StatelessWidget {
           }
         }
         // If no match is found, [WidgetsApp.onUnknownRoute] handles it.
-        return MaterialPageRoute(builder: (context) => UnknownScreen());
+        return MaterialPageRoute(builder: (context) => const UnknownScreen());
       },
     );
   }

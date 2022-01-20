@@ -44,7 +44,8 @@ class LoginFormState extends State<LoginForm> {
               mail = value;
             },
             validator: (value) {
-              return multyValidate([MailValidator(value, "enter correct Mail adress")]);
+              return multyValidate(
+                  [MailValidator(value, "enter correct Mail address")]);
             },
           ),
           TextFormField(
@@ -61,7 +62,6 @@ class LoginFormState extends State<LoginForm> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Row(
-
               children: [
                 ElevatedButton(
                   onPressed: () async {
@@ -70,13 +70,13 @@ class LoginFormState extends State<LoginForm> {
                   },
                   child: const Text('Register'),
                 ),
-                Spacer(),
+                const Spacer(),
                 ElevatedButton(
                   onPressed: () async {
                     // Validate returns true if the form is valid, or false otherwise.
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      UserCredential userCredential = await FirebaseAuth
+                      await FirebaseAuth
                           .instance
                           .signInWithEmailAndPassword(
                               email: mail!, password: password!);

@@ -13,27 +13,22 @@ class LoginScreen extends StatelessWidget {
       AlertDialog(
         title: Row(
           children: [
-            Text("Login"),
-            Spacer(),
+            const Text("Login"),
+            const Spacer(),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("close"),
+              child: const Text("close"),
             ),
           ],
         ),
         content: Column(
-          children: [
+          children: const [
             LoginForm(),
           ],
         ),
       ),
     ]);
-
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(child: LoginForm()),
-    );
   }
 }

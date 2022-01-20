@@ -20,8 +20,4 @@ class AuthNotifier extends StateNotifier<AuthModel> {
   void logOut() {
     state = const AuthModel(false, null, true);
   }
-// void increment() {
-//   state = CounterModel(state.count + 1);
-// }
-
 }

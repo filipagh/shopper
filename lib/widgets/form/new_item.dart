@@ -44,15 +44,15 @@ class NewItemFormState extends State<NewItemForm> {
               text = value;
             },
             validator: (value) {
-              return multyValidate([EmptyValidator(value, "enter name of item")]);
+              return multyValidate(
+                  [EmptyValidator(value, "enter name of item")]);
             },
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Row(
-
               children: [
-                Spacer(),
+                const Spacer(),
                 ElevatedButton(
                   onPressed: () async {
                     // Validate returns true if the form is valid, or false otherwise.

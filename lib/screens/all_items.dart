@@ -7,7 +7,7 @@ import 'package:home_storage/states/all_items.dart';
 import 'package:home_storage/widgets/app_bar.dart';
 import 'package:home_storage/widgets/form/new_item.dart';
 import 'package:home_storage/widgets/menu.dart';
-import 'package:hooks_riverpod/all.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class AllItemsScreen extends HookWidget {
   static const navUrl = '/items';
@@ -16,10 +16,8 @@ class AllItemsScreen extends HookWidget {
 
   const AllItemsScreen({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
-
     AllItemsListener.addListener();
 
     final allItems = useProvider(allItemsProvider);
@@ -28,9 +26,9 @@ class AllItemsScreen extends HookWidget {
     Widget buildList() {
       var filteredItems = allItems.items;
       if (searchQuery.value.isNotEmpty) {
-       final query = searchQuery.value.toLowerCase();
-        filteredItems = filteredItems.where(
-                (element) => element.text.toLowerCase().contains(query))
+        final query = searchQuery.value.toLowerCase();
+        filteredItems = filteredItems
+            .where((element) => element.text.toLowerCase().contains(query))
             .toList();
       }
 
@@ -45,7 +43,7 @@ class AllItemsScreen extends HookWidget {
                 onTap: () {
                   ItemRepo.deleteItem(item);
                 },
-                child: Icon(Icons.delete)),
+                child: const Icon(Icons.delete)),
             title: Text(item.text),
             subtitle: Text(item.text),
           );
@@ -53,28 +51,29 @@ class AllItemsScreen extends HookWidget {
       );
     }
 
-
     return Scaffold(
       drawer: getMenu(context),
       appBar: getAppBar(),
-      floatingActionButton: FloatAddItemButton(),
+      floatingActionButton: const FloatAddItemButton(),
       body: Center(
         child: Column(
           children: [
-            Text(
+            const Text(
               "All Items",
               textScaleFactor: 3,
             ),
-            Divider(),
+            const Divider(),
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 300),
               child: Column(
                 children: [
-                  TextField(onChanged: (text) {searchQuery.value=text;},),
-                  ListTileTheme(
-                    tileColor: Colors.lightBlueAccent,
-                    child: buildList()
+                  TextField(
+                    onChanged: (text) {
+                      searchQuery.value = text;
+                    },
                   ),
+                  ListTileTheme(
+                      tileColor: Colors.lightBlueAccent, child: buildList()),
                 ],
               ),
             ),
@@ -102,14 +101,17 @@ class FloatAddItemButton extends StatelessWidget {
                 body: AlertDialog(
                     title: Row(
                       children: [
-                        Text("Add new item"),
-                        Spacer(),
+                        const Text("Add new item"),
+                        const Spacer(),
                         GestureDetector(
-                          child: Icon(Icons.close),
-                          onTap: () {Navigator.pop(context);},
+                          child: const Icon(Icons.close),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
                         )
                       ],
-                    ), content: NewItemForm()));
+                    ),
+                    content: const NewItemForm()));
           },
         );
       },

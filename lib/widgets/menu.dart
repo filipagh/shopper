@@ -18,7 +18,8 @@ Widget getMenu(BuildContext context) {
         ),
         ListTile(
           title: const Text('All items'),
-          onTap: () {  Navigator.pop(context);
+          onTap: () {
+            Navigator.pop(context);
             Navigator.pushNamed(context, '/items');
 // Update the state of the app.
 // ...
@@ -26,7 +27,8 @@ Widget getMenu(BuildContext context) {
         ),
         ListTile(
           title: const Text('Item 2'),
-          onTap: () { Navigator.pop(context);
+          onTap: () {
+            Navigator.pop(context);
             Navigator.pushNamed(context, '/xxx/2');
 // Update the state of the app.
 // ...
