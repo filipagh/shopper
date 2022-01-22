@@ -35,7 +35,7 @@ class _CustomAppBar extends HookWidget implements PreferredSizeWidget {
                   },
                   child: Text(
                     authModel.user!.email! + "\nLOGOUT",
-                    textScaleFactor: 2,
+                    textScaleFactor: 1.5,
                   ))),
         ] else ...[
           Center(
@@ -43,7 +43,7 @@ class _CustomAppBar extends HookWidget implements PreferredSizeWidget {
               child: GestureDetector(
                   child: const Text(
                     "login",
-                    textScaleFactor: 2,
+                    textScaleFactor: 1.5,
                   ),
                   onTap: () {
                     Navigator.pushNamed(context, LoginScreen.navUrl);

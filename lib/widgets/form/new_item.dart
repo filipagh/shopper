@@ -7,11 +7,13 @@ import 'package:home_storage/widgets/validator/empty_string_validator.dart';
 import 'package:home_storage/widgets/validator/utils/multy_validator.dart';
 
 class NewItemForm extends StatefulWidget {
-  const NewItemForm({Key? key}) : super(key: key);
+  final String? predefinedName;
+
+  const NewItemForm({Key? key, this.predefinedName}) : super(key: key);
 
   @override
   NewItemFormState createState() {
-    return NewItemFormState();
+    return NewItemFormState(predefinedName);
   }
 }
 
@@ -24,6 +26,9 @@ class NewItemFormState extends State<NewItemForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
+  late String? predefinedName;
+
+  NewItemFormState(this.predefinedName);
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +42,7 @@ class NewItemFormState extends State<NewItemForm> {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextFormField(
+            initialValue: predefinedName,
             decoration: const InputDecoration(
                 icon: Icon(Icons.create), labelText: "Name"),
             autofocus: true,

@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:home_storage/main.dart';
+import 'package:home_storage/models/shopping_model.dart';
 import 'package:home_storage/services/firebase_db/item_repo.dart';
 import 'package:home_storage/states/all_items.dart';
+import 'package:home_storage/utils/navigator/navigator_app.dart';
 import 'package:home_storage/widgets/app_bar.dart';
 import 'package:home_storage/widgets/form/new_item.dart';
 import 'package:home_storage/widgets/menu.dart';
@@ -16,6 +18,32 @@ class AllItemsScreen extends HookWidget {
 
   const AllItemsScreen({Key? key}) : super(key: key);
 
+  bool isPossibleToAddItem(String query, int itemsCount) {
+    if (itemsCount < 6 && query.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
+  List<_Tile> processItemList(String query, List<ShoppingModel> items) {
+    var filteredItems = items;
+    List<_Tile> finalTiles = [];
+    if (query.isNotEmpty) {
+      filteredItems = filteredItems
+          .where((element) =>
+              element.text.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    }
+    for (var element in filteredItems) {
+      finalTiles.add(_ItemTile(element));
+    }
+    if (isPossibleToAddItem(query, filteredItems.length)) {
+      finalTiles.add(_AddItemTile(ShoppingModel(query)));
+    }
+
+    return finalTiles;
+  }
+
   @override
   Widget build(BuildContext context) {
     AllItemsListener.addListener();
@@ -24,29 +52,15 @@ class AllItemsScreen extends HookWidget {
     final searchQuery = useState(searchQueryState);
 
     Widget buildList() {
-      var filteredItems = allItems.items;
-      if (searchQuery.value.isNotEmpty) {
-        final query = searchQuery.value.toLowerCase();
-        filteredItems = filteredItems
-            .where((element) => element.text.toLowerCase().contains(query))
-            .toList();
-      }
+      var filteredItems = processItemList(searchQuery.value, allItems.items);
 
       return ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         itemCount: filteredItems.length,
         itemBuilder: (context, index) {
-          final item = filteredItems[index];
-          return ListTile(
-            trailing: GestureDetector(
-                onTap: () {
-                  ItemRepo.deleteItem(item);
-                },
-                child: const Icon(Icons.delete)),
-            title: Text(item.text),
-            subtitle: Text(item.text),
-          );
+          final tile = filteredItems[index];
+          return tile.buildTile();
         },
       );
     }
@@ -111,29 +125,84 @@ class FloatAddItemButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      child: const Icon(Icons.add),
       onPressed: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return Scaffold(
-                backgroundColor: Colors.transparent,
-                body: AlertDialog(
-                    title: Row(
-                      children: [
-                        const Text("Add new item"),
-                        const Spacer(),
-                        GestureDetector(
-                          child: const Icon(Icons.close),
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                        )
-                      ],
-                    ),
-                    content: const NewItemForm()));
-          },
-        );
+        addItemPopup(context);
       },
     );
   }
+}
+
+Future addItemPopup(context, {ShoppingModel? suggestItem}) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Scaffold(
+          backgroundColor: Colors.transparent,
+          body: AlertDialog(
+              title: Row(
+                children: [
+                  const Text("Add new item"),
+                  const Spacer(),
+                  GestureDetector(
+                    child: const Icon(Icons.close),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
+              content: NewItemForm(predefinedName: suggestItem?.text)));
+    },
+  );
+}
+
+class _ItemTile implements _Tile {
+  @override
+  ListTile buildTile() {
+    return ListTile(
+      trailing: GestureDetector(
+          onTap: () {
+            ItemRepo.deleteItem(item);
+          },
+          child: const Icon(Icons.delete)),
+      title: Text(item.text),
+      subtitle: null,
+    );
+  }
+
+  _ItemTile(this.item);
+
+  @override
+  ShoppingModel item;
+}
+
+class _AddItemTile implements _Tile {
+  @override
+  ListTile buildTile() {
+    return ListTile(
+      onTap: () {
+        addItemPopup(NavigatorCustom.navigatorKey.currentContext!,
+            suggestItem: item);
+      },
+      title: Row(
+        children: [
+          Text("Add item: ${item.text}"),
+          const Spacer(),
+          const Icon(Icons.add),
+        ],
+      ),
+    );
+  }
+
+  _AddItemTile(this.item);
+
+  @override
+  ShoppingModel item;
+}
+
+abstract class _Tile {
+  late ShoppingModel item;
+
+  ListTile buildTile();
 }
