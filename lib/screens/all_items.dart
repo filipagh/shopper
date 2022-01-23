@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:home_storage/main.dart';
@@ -53,14 +52,12 @@ class AllItemsScreen extends HookWidget {
 
     Widget buildList() {
       var filteredItems = processItemList(searchQuery.value, allItems.items);
-
       return ListView.builder(
-        scrollDirection: Axis.vertical,
         shrinkWrap: true,
         itemCount: filteredItems.length,
         itemBuilder: (context, index) {
           final tile = filteredItems[index];
-          return tile.buildTile();
+          return Card(color: Colors.lightBlueAccent, child: tile.buildTile());
         },
       );
     }
@@ -69,27 +66,27 @@ class AllItemsScreen extends HookWidget {
       drawer: getMenu(context),
       appBar: getAppBar(),
       floatingActionButton: const FloatAddItemButton(),
-      body: Center(
-        child: Column(
-          children: [
-            const Text(
-              "All Items",
-              textScaleFactor: 3,
-            ),
-            const Divider(),
-            ConstrainedBox(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text(
+            "All Items",
+            textScaleFactor: 3,
+          ),
+          const Divider(),
+          Expanded(
+            child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 300),
               child: Column(
                 children: [
                   SearchBar(searchQuery: searchQuery),
                   const Divider(),
-                  ListTileTheme(
-                      tileColor: Colors.lightBlueAccent, child: buildList()),
+                  Expanded(child: buildList()),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
