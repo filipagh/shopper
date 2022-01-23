@@ -15,4 +15,9 @@ class ItemRepo {
   static Stream<DatabaseEvent> getStream() {
     return _ref.onValue;
   }
+
+  static void replace(ShoppingModel newItem, ShoppingModel replaceFor) {
+    _ref.child(replaceFor.text).remove();
+    _ref.child(newItem.text).set(true);
+  }
 }

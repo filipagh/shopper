@@ -1,40 +1,47 @@
 // Create a Form widget.
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:home_storage/models/shopping_model.dart';
 import 'package:home_storage/services/firebase_db/item_repo.dart';
 import 'package:home_storage/widgets/validator/empty_string_validator.dart';
 import 'package:home_storage/widgets/validator/utils/multy_validator.dart';
 
-class NewItemForm extends StatefulWidget {
-  final String? predefinedName;
+class ItemForm extends StatefulWidget {
+  final ShoppingModel? referencedItem;
+  late String buttonText;
+  late Function(ShoppingModel) submitFunc;
 
-  const NewItemForm({Key? key, this.predefinedName}) : super(key: key);
+  ItemForm.addItemForm({Key? key, this.referencedItem}) : super(key: key) {
+    buttonText = "Add";
+    submitFunc = (ShoppingModel item) => _addItem(item);
+  }
+
+  ItemForm.editItemForm({Key? key, required this.referencedItem})
+      : super(key: key) {
+    buttonText = "Edit";
+    submitFunc = (ShoppingModel item) => _editItem(item, referencedItem!);
+  }
 
   @override
-  NewItemFormState createState() {
-    return NewItemFormState(predefinedName);
+  ItemFormState createState() {
+    return ItemFormState();
   }
 }
 
 // Create a corresponding State class.
 // This class holds data related to the form.
-class NewItemFormState extends State<NewItemForm> {
+class ItemFormState extends State<ItemForm> {
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
-  late String? predefinedName;
 
-  NewItemFormState(this.predefinedName);
+  ItemFormState();
 
   @override
   Widget build(BuildContext context) {
     String? text;
-    // Build a Form widget using the _formKey created above.
-    // return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
 
     return Form(
       key: _formKey,
@@ -42,7 +49,7 @@ class NewItemFormState extends State<NewItemForm> {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextFormField(
-            initialValue: predefinedName,
+            initialValue: widget.referencedItem?.text,
             decoration: const InputDecoration(
                 icon: Icon(Icons.create), labelText: "Name"),
             autofocus: true,
@@ -64,11 +71,11 @@ class NewItemFormState extends State<NewItemForm> {
                     // Validate returns true if the form is valid, or false otherwise.
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      ItemRepo.insertShoppItem(ShoppingModel(text!));
+                      widget.submitFunc(ShoppingModel(text!));
                       Navigator.of(context).pop();
                     }
                   },
-                  child: const Text('Add'),
+                  child: Text(widget.buttonText),
                 ),
               ],
             ),
@@ -77,4 +84,12 @@ class NewItemFormState extends State<NewItemForm> {
       ),
     );
   }
+}
+
+void _editItem(ShoppingModel newItem, ShoppingModel replaceFor) {
+  ItemRepo.replace(newItem, replaceFor);
+}
+
+void _addItem(ShoppingModel item) {
+  ItemRepo.insertShoppItem(item);
 }

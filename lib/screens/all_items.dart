@@ -6,8 +6,8 @@ import 'package:home_storage/services/firebase_db/item_repo.dart';
 import 'package:home_storage/states/all_items.dart';
 import 'package:home_storage/utils/navigator/navigator_app.dart';
 import 'package:home_storage/widgets/app_bar.dart';
-import 'package:home_storage/widgets/form/new_item.dart';
 import 'package:home_storage/widgets/menu.dart';
+import 'package:home_storage/widgets/popups/item_popup.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class AllItemsScreen extends HookWidget {
@@ -130,34 +130,13 @@ class FloatAddItemButton extends StatelessWidget {
   }
 }
 
-Future addItemPopup(context, {ShoppingModel? suggestItem}) {
-  return showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Scaffold(
-          backgroundColor: Colors.transparent,
-          body: AlertDialog(
-              title: Row(
-                children: [
-                  const Text("Add new item"),
-                  const Spacer(),
-                  GestureDetector(
-                    child: const Icon(Icons.close),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              ),
-              content: NewItemForm(predefinedName: suggestItem?.text)));
-    },
-  );
-}
-
 class _ItemTile implements _Tile {
   @override
   ListTile buildTile() {
     return ListTile(
+      onTap: () {
+        editItemPopup(NavigatorCustom.navigatorKey.currentContext!, item);
+      },
       trailing: GestureDetector(
           onTap: () {
             ItemRepo.deleteItem(item);
