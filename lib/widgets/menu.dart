@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:home_storage/screens/all_items.dart';
+import 'package:home_storage/screens/metro.dart';
 
 Widget getMenu(BuildContext context) {
   return Drawer(
@@ -20,16 +22,16 @@ Widget getMenu(BuildContext context) {
           title: const Text('All items'),
           onTap: () {
             Navigator.pop(context);
-            Navigator.pushNamed(context, '/items');
+            Navigator.pushNamed(context, AllItemsScreen.navUrl);
 // Update the state of the app.
 // ...
           },
         ),
         ListTile(
-          title: const Text('Item 2'),
+          title: const Text('Metro'),
           onTap: () {
             Navigator.pop(context);
-            Navigator.pushNamed(context, '/xxx/2');
+            Navigator.pushNamed(context, MetroListScreen.navUrl);
 // Update the state of the app.
 // ...
           },

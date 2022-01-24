@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/src/provider.dart';
 import 'package:home_storage/screens/all_items.dart';
 import 'package:home_storage/screens/home.dart';
 import 'package:home_storage/screens/login.dart';
+import 'package:home_storage/screens/metro.dart';
 import 'package:home_storage/screens/register.dart';
 import 'package:home_storage/screens/unknown.dart';
 import 'package:home_storage/utils/navigator/regex_custom_path.dart';
@@ -39,6 +40,7 @@ class NavigatorCustom extends StatelessWidget {
         LoginScreen.navUrl: (context) => const LoginScreen(),
         RegisterScreen.navUrl: (context) => const RegisterScreen(),
         AllItemsScreen.navUrl: (context) => const AllItemsScreen(),
+        MetroListScreen.navUrl: (context) => const MetroListScreen(),
       },
       onGenerateRoute: (RouteSettings settings) {
         for (RegexCustomPath path in globalRoutes) {
