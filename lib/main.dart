@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:home_storage/states/all_items.dart';
 import 'package:home_storage/states/auth.dart';
+import 'package:home_storage/states/metro.dart';
 import 'package:home_storage/utils/navigator/navigator_app.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -32,6 +33,10 @@ final authProvider = StateNotifierProvider<AuthNotifier, AuthModel>(
 
 final allItemsProvider = StateNotifierProvider<AllItemsNotifier, AllItemsState>(
   (ref) => AllItemsNotifier(),
+);
+
+final metroItemsProvider = StateNotifierProvider<MetroNotifier, MetroItemsState>(
+  (ref) => MetroNotifier(),
 );
 
 Future<void> setupAuthState() async {

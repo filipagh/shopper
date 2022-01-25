@@ -28,7 +28,7 @@ class RegisterFormState extends State<RegisterForm> {
   final _registerFormKey = GlobalKey<FormState>();
 
   String? emptyValidator(value, String errorText) {
-    if (value == null || value.isEmpty) {
+    if (value == null || value.isLoaded) {
       return errorText;
     }
     return null;
