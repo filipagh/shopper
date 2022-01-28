@@ -71,8 +71,9 @@ class ItemFormState extends State<ItemForm> {
                     // Validate returns true if the form is valid, or false otherwise.
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      widget.submitFunc(ShoppingModel(text!));
-                      Navigator.of(context).pop();
+                      var shoppingModel = ShoppingModel(text!);
+                      widget.submitFunc(shoppingModel);
+                      Navigator.of(context).pop(shoppingModel);
                     }
                   },
                   child: Text(widget.buttonText),

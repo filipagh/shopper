@@ -4,7 +4,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:home_storage/main.dart';
 import 'package:home_storage/models/shopping_model.dart';
-import 'package:home_storage/services/firebase_db/item_repo.dart';
+import 'package:home_storage/services/firebase_db/metro_repo.dart';
+import 'package:home_storage/states/all_items.dart';
 import 'package:home_storage/states/metro.dart';
 import 'package:home_storage/utils/navigator/navigator_app.dart';
 import 'package:home_storage/widgets/app_bar.dart';
@@ -17,20 +18,19 @@ class MetroListScreen extends HookWidget {
 
   final searchQueryState = "";
 
-
-
   const MetroListScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     MetroItemsListener.addListener();
+    AllItemsListener.addListener();
 
     final allItems = useProvider(allItemsProvider);
     final metroItems = useProvider(metroItemsProvider);
     final searchQuery = useState(searchQueryState);
 
     Widget buildList() {
-      var filteredItems = processItemList(searchQuery.value, metroItems.items);
+      var filteredItems = processItemList(searchQuery.value, metroItems.items, allItems.items);
       return ListView.builder(
         shrinkWrap: true,
         itemCount: filteredItems.length,
@@ -55,7 +55,6 @@ class MetroListScreen extends HookWidget {
                 constraints: BoxConstraints(maxHeight: 50),
                 child: Row(
                   children: const [
-
                     Expanded(
                       child: FittedBox(
                         child: Text(
@@ -69,7 +68,6 @@ class MetroListScreen extends HookWidget {
                   ],
                 ),
               ),
-
               const Divider(),
               SearchBar(searchQuery: searchQuery),
               const Divider(),
@@ -78,9 +76,22 @@ class MetroListScreen extends HookWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Transform.scale(scale: 4,child: CircularProgressIndicator()),
+                      Transform.scale(
+                          scale: 4, child: CircularProgressIndicator()),
                     ],
                   ),
+                )
+              ] else if (metroItems.items.isEmpty) ...[
+                Column(
+                  children: [
+                    Text("Your list is empty"),
+                    ElevatedButton(
+                      onPressed: () {
+                        MetroRepo.insertItems(allItems.items);
+                      },
+                      child: Text("Create new list from All items"),
+                    )
+                  ],
                 )
               ] else ...[
                 Expanded(child: buildList()),
@@ -92,19 +103,39 @@ class MetroListScreen extends HookWidget {
     );
   }
 
-  List<_Tile> processItemList(String query, List<ShoppingModel> items) {
+  List<_Tile> processItemList(String query, List<ShoppingModel> items, List<ShoppingModel> allItems) {
     var filteredItems = items;
     List<_Tile> finalTiles = [];
     if (query.isNotEmpty) {
       filteredItems = filteredItems
           .where((element) =>
-          element.text.toLowerCase().contains(query.toLowerCase()))
+              element.text.toLowerCase().contains(query.toLowerCase()))
           .toList();
     }
     for (var element in filteredItems) {
-      finalTiles.add(_ItemTile(element));
+      finalTiles.add(_ItemTile(element, Colors.lightBlue[100]!));
     }
-    if (isPossibleToAddItem(query, filteredItems.length)) {
+    if (query.isNotEmpty) {
+      List<ShoppingModel> removedItems = allItems
+          .where((element) =>
+          element.text.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+
+      for (var addedItem in finalTiles) {
+        for (var rmItem in removedItems) {
+          if (identical(addedItem.item.text, rmItem.text)) {
+            removedItems.remove(rmItem);
+            break;
+          }
+        }
+      }
+      for (var element in removedItems) {
+        finalTiles.add(_RemovedItemTile(element));
+      }
+    }
+
+
+    if (isPossibleToAddItem(query, finalTiles.length)) {
       finalTiles.add(_AddItemTile(ShoppingModel(query)));
     }
 
@@ -158,7 +189,9 @@ class _PopupMenu extends StatelessWidget {
               child: Text('Delete'),
             ),
           ],
-          child: Icon(Icons.more_vert,),
+          child: const Icon(
+            Icons.more_vert,
+          ),
         ),
       ),
     );
@@ -208,18 +241,12 @@ class _ItemTile implements _Tile {
   Widget buildTile() {
     return Dismissible(
       key: ObjectKey(item),
-      onDismissed: (direction) {},
+      onDismissed: (direction) {MetroRepo.deleteItem(item);},
       child: Card(
-        color: Colors.blueAccent,
+        color: Colors.lightBlue[100],
         child: ListTile(
-          onTap: () {
-            editItemPopup(NavigatorCustom.navigatorKey.currentContext!, item);
-          },
-          trailing: GestureDetector(
-              onTap: () {
-                ItemRepo.deleteItem(item);
-              },
-              child: const Icon(Icons.delete)),
+          trailing:
+              GestureDetector(onTap: () {}, child: const Icon(Icons.note_add)),
           title: Text(item.text),
           subtitle: null,
         ),
@@ -227,7 +254,30 @@ class _ItemTile implements _Tile {
     );
   }
 
-  _ItemTile(this.item);
+  _ItemTile(this.item, this.color);
+
+  @override
+  ShoppingModel item;
+  Color color;
+}
+
+class _RemovedItemTile implements _Tile {
+  @override
+  Widget buildTile() {
+    return Card(
+      color: Colors.red[100],
+      child: ListTile(
+        trailing:
+            GestureDetector(onTap: () {
+              MetroRepo.insertShoppItem(item);
+            }, child: const Icon(Icons.add)),
+        title: Text(item.text),
+        subtitle: null,
+      ),
+    );
+  }
+
+  _RemovedItemTile(this.item);
 
   @override
   ShoppingModel item;
@@ -236,17 +286,26 @@ class _ItemTile implements _Tile {
 class _AddItemTile implements _Tile {
   @override
   Widget buildTile() {
-    return ListTile(
-      onTap: () {
-        addItemPopup(NavigatorCustom.navigatorKey.currentContext!,
-            suggestItem: item);
-      },
-      title: Row(
-        children: [
-          Text("Add item: ${item.text}"),
-          const Spacer(),
-          const Icon(Icons.add),
-        ],
+    return Card(
+      color: Colors.lightGreen,
+      child: ListTile(
+        onTap: () {
+          addItemPopup(NavigatorCustom.navigatorKey.currentContext!,
+                  suggestItem: item)
+              .then((item) {
+            MetroRepo.insertShoppItem(item);
+            if (item != null) {
+              MetroRepo.insertShoppItem(item);
+            }
+          });
+        },
+        title: Row(
+          children: [
+            Text("Add item: ${item.text}"),
+            const Spacer(),
+            const Icon(Icons.add),
+          ],
+`        ),
       ),
     );
   }
