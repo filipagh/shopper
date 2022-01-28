@@ -305,7 +305,7 @@ class _AddItemTile implements _Tile {
             const Spacer(),
             const Icon(Icons.add),
           ],
-`        ),
+        ),
       ),
     );
   }
