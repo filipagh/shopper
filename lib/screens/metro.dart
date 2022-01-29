@@ -30,7 +30,8 @@ class MetroListScreen extends HookWidget {
     final searchQuery = useState(searchQueryState);
 
     Widget buildList() {
-      var filteredItems = processItemList(searchQuery.value, metroItems.items, allItems.items);
+      var filteredItems =
+          processItemList(searchQuery.value, metroItems.items, allItems.items);
       return ListView.builder(
         shrinkWrap: true,
         itemCount: filteredItems.length,
@@ -103,7 +104,8 @@ class MetroListScreen extends HookWidget {
     );
   }
 
-  List<_Tile> processItemList(String query, List<ShoppingModel> items, List<ShoppingModel> allItems) {
+  List<_Tile> processItemList(
+      String query, List<ShoppingModel> items, List<ShoppingModel> allItems) {
     var filteredItems = items;
     List<_Tile> finalTiles = [];
     if (query.isNotEmpty) {
@@ -118,12 +120,12 @@ class MetroListScreen extends HookWidget {
     if (query.isNotEmpty) {
       List<ShoppingModel> removedItems = allItems
           .where((element) =>
-          element.text.toLowerCase().contains(query.toLowerCase()))
+              element.text.toLowerCase().contains(query.toLowerCase()))
           .toList();
 
       for (var addedItem in finalTiles) {
         for (var rmItem in removedItems) {
-          if (identical(addedItem.item.text, rmItem.text)) {
+          if (addedItem.item.text == rmItem.text) {
             removedItems.remove(rmItem);
             break;
           }
@@ -133,7 +135,6 @@ class MetroListScreen extends HookWidget {
         finalTiles.add(_RemovedItemTile(element));
       }
     }
-
 
     if (isPossibleToAddItem(query, finalTiles.length)) {
       finalTiles.add(_AddItemTile(ShoppingModel(query)));
@@ -150,43 +151,38 @@ class MetroListScreen extends HookWidget {
   }
 }
 
-class _PopupMenu extends StatelessWidget {
+class _PopupMenu extends HookWidget {
   const _PopupMenu({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final allItems = useProvider(allItemsProvider);
     return Expanded(
       child: FittedBox(
         alignment: Alignment.centerRight,
         child: PopupMenuButton<String>(
           onSelected: (String result) {
             switch (result) {
-              case 'option1':
-                print('option 1 clicked');
+              case 'Load All Items':
+                MetroRepo.clearList();
+                MetroRepo.insertItems(allItems.items);
                 break;
-              case 'option2':
-                print('option 2 clicked');
-                break;
-              case 'delete':
-                print('I want to delete');
+              case 'Clear All':
+                MetroRepo.clearList();
                 break;
               default:
             }
           },
           itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
             const PopupMenuItem<String>(
-              value: 'option1',
-              child: Text('Option 1'),
+              value: 'Load All Items',
+              child: Text('Load All Items'),
             ),
             const PopupMenuItem<String>(
-              value: 'option2',
-              child: Text('Option 2'),
-            ),
-            const PopupMenuItem<String>(
-              value: 'delete',
-              child: Text('Delete'),
+              value: 'Clear All',
+              child: Text('Clear All'),
             ),
           ],
           child: const Icon(
@@ -240,8 +236,25 @@ class _ItemTile implements _Tile {
   @override
   Widget buildTile() {
     return Dismissible(
+      background: Container(color: Colors.red[200]),
       key: ObjectKey(item),
-      onDismissed: (direction) {MetroRepo.deleteItem(item);},
+      onDismissed: (direction) {
+        MetroRepo.deleteItem(item);
+        ScaffoldMessenger.of(NavigatorCustom.navigatorKey.currentContext!)
+            .showSnackBar(SnackBar(content: Row(
+              children: [
+                Text('${item.text} dismissed'),
+                TextButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(NavigatorCustom.navigatorKey.currentContext!).hideCurrentSnackBar();
+                      MetroRepo.insertShoppItem(item);
+                      ScaffoldMessenger.of(NavigatorCustom.navigatorKey.currentContext!)
+                          .showSnackBar(SnackBar(content: Text("reverted")));
+                      },
+                    child: Text("revert"))
+              ],
+            )));
+      },
       child: Card(
         color: Colors.lightBlue[100],
         child: ListTile(
@@ -267,10 +280,11 @@ class _RemovedItemTile implements _Tile {
     return Card(
       color: Colors.red[100],
       child: ListTile(
-        trailing:
-            GestureDetector(onTap: () {
+        trailing: GestureDetector(
+            onTap: () {
               MetroRepo.insertShoppItem(item);
-            }, child: const Icon(Icons.add)),
+            },
+            child: const Icon(Icons.add)),
         title: Text(item.text),
         subtitle: null,
       ),

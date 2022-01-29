@@ -20,6 +20,7 @@ FirebaseOptions get firebaseOptions {
 }
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await setupAuthState();
 
   configureApp();

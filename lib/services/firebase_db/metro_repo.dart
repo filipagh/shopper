@@ -16,6 +16,10 @@ class MetroRepo {
     return _ref.onValue;
   }
 
+  static void clearList() {
+    _ref.remove();
+  }
+
   static void insertItems(List<ShoppingModel> allItems) {
     for (var element in allItems) {
       _ref.child(element.text).set(true);
