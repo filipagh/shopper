@@ -13,7 +13,7 @@ jobs:
   reusable_workflow_job:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/workflows/sub.yml
+      - uses: ./../.github/workflows/sub.yml
         with:
           text: ${{ inputs.text }}
       - name: xxx
