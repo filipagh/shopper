@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - uses: ./../.github/workflows/sub
+      - uses: ./.github/workflows/sub.yml
         with:
           text: ${{ inputs.text }}
       - name: xxx
