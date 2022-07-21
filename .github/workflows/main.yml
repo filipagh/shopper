@@ -13,6 +13,8 @@ jobs:
   reusable_workflow_job:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - uses: ./../.github/workflows/sub.yml
         with:
           text: ${{ inputs.text }}
