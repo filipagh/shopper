@@ -1,0 +1,20 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI trigger
+
+on:
+  workflow_dispatch:
+    inputs:
+      text:
+        required: true
+        type: string
+        
+jobs:
+  reusable_workflow_job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/workflows/sub.yml
+        with:
+          text: ${{ inputs.text }}
+      - name: xxx
+        run: echo ok
