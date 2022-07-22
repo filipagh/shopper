@@ -15,19 +15,9 @@ env:
 
         
 jobs:
+  
+
   reusable_workflow_job:
     uses: ./.github/workflows/sub.yml
     with:
-      text: ${{ inputs.text }}
-  xxx:
-    if: ${{'' == ''}}
-    strategy:
-      matrix: 
-        variable: ['a','b']
-    runs-on: ubuntu-latest
-    needs: [reusable_workflow_job]
-    steps:
-      - name: xxx
-        run: |
-          echo ${{ matrix.variable }}
-          echo $RELEASE_TYPE
+      tag: ${{ inputs.text }}
