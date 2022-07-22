@@ -28,5 +28,8 @@ jobs:
     needs: [reusable_workflow_job]
     steps:
       - name: xxx
-        run: echo ${{ matrix.variable }}
-   
+        run: |
+          echo ${{ matrix.variable }}
+          echo $RELEASE_TYPE
+          echo ${{RELEASE_TYPE}}
+          echo ${{env.RELEASE_TYPE}}
