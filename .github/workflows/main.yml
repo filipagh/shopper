@@ -9,8 +9,8 @@ on:
         required: true
         type: string
 env:
-  VERSION: ${{inputs.text%-*}}
-  RELEASE_TYPE: ${{inputs.text#*-}}
+  VERSION: ${inputs.text%-*}
+  RELEASE_TYPE: ${inputs.text#*-}
 
 
         
