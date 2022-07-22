@@ -11,12 +11,8 @@ on:
 env:
   VERSION: ${inputs.text%-*}
   RELEASE_TYPE: ${inputs.text#*-}
-
-
         
 jobs:
-  
-
   reusable_workflow_job:
     uses: ./.github/workflows/sub.yml
     with:
