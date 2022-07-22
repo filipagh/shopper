@@ -4,15 +4,19 @@ name: CI
 on:
   workflow_call:
     inputs:
-      text:
+      tag:
         required: true
         type: string
 
 jobs:
-  xxx:
+  parse_tag:
+    outputs:
+      version: ${{}}
+      build_type: ${{}}
     runs-on: ubuntu-latest
     steps:
-      - name: xx
+      - name: process_version
         run: |
           echo ${{inputs.text}}
+          echo "::set-output version=${{inputs.text}}%-*"
 
