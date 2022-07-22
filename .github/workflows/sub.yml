@@ -18,5 +18,6 @@ jobs:
       - name: process_version
         run: |
           echo ${{inputs.text}}
-          echo "::set-output version=${{inputs.text}}%-*"
+          echo "::set-output version=${inputs.text}%-*"
+          echo ${{parse_tag.outputs.version}}
 
