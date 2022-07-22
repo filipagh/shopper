@@ -20,7 +20,7 @@ jobs:
     with:
       text: ${{ inputs.text }}
   xxx:
-    if: ${{env.RELEASE_TYPE == ""}}
+    if: ${{'' == ""}}
     strategy:
       matrix: 
         variable: ['a','b']
