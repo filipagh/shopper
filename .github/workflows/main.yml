@@ -8,16 +8,31 @@ on:
       text:
         required: true
         type: string
+env:
+  VERSION: ${input%-*}
+  RELEASE_TYPE: ${input#*-}
+
+
         
 jobs:
   reusable_workflow_job:
     uses: ./.github/workflows/sub.yml
     with:
       text: ${{ inputs.text }}
+  a:
+    runs-on: ubuntu-latest
+    steps:
+      - id: set-matrix
+        run: echo "::set-output name=matrix::{\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}"
+ 
   xxx:
+    if: ${{$RELEASE_TYPE == ""}}
+    strategy:
+      matrix: 
+        variable: ['a','b']
     runs-on: ubuntu-latest
     needs: [reusable_workflow_job]
     steps:
       - name: xxx
-        run: echo xxx
+        run: echo ${{ matrix.variable }}
    
