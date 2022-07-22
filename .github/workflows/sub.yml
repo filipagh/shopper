@@ -11,8 +11,8 @@ on:
 jobs:
   parse_tag:
     outputs:
-      version: ${{}}
-      build_type: ${{}}
+      version: 'aa'
+      build_type: 'aa'
     runs-on: ubuntu-latest
     steps:
       - name: process_version
