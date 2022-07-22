@@ -31,5 +31,3 @@ jobs:
         run: |
           echo ${{ matrix.variable }}
           echo $RELEASE_TYPE
-          echo ${{RELEASE_TYPE}}
-          echo ${{env.RELEASE_TYPE}}
