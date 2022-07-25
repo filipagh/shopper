@@ -17,4 +17,4 @@ jobs:
       - uses: rickstaa/action-create-tag@v1
         with:
           tag: $VERSION-dev
-          message: "()[https://github.com/filipagh/shopper/pull/1]"
+          message: "(PR)[https://github.com/filipagh/shopper/pull/1]"
