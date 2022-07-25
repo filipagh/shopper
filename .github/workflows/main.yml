@@ -21,7 +21,3 @@ jobs:
         with:
           tag: "test tag"
           message: "Latest release"
-  reusable_workflow_job:
-    uses: ./.github/workflows/sub.yml
-    with:
-      tag: ${{ inputs.text }}
