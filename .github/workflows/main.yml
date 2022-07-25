@@ -13,6 +13,14 @@ env:
   RELEASE_TYPE: ${inputs.text#*-}
         
 jobs:
+  aa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: rickstaa/action-create-tag@v1
+        with:
+          tag: "test tag"
+          message: "Latest release"
   reusable_workflow_job:
     uses: ./.github/workflows/sub.yml
     with:
