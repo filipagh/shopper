@@ -1,23 +1,20 @@
-
-name: CI
+name: Mark release as deleted in CRM
 
 on:
-  workflow_call:
-    inputs:
-      tag:
-        required: true
-        type: string
+    workflow_call:
+        inputs:
+            version:
+                required: true
+                type: string
 
 jobs:
-  parse_tag:
-    outputs:
-      version: 'aa'
-      build_type: 'aa'
-    runs-on: ubuntu-latest
-    steps:
-      - name: process_version
-        run: |
-          echo ${{inputs.text}}
-          echo "::set-output version=${inputs.text}%-*"
-          echo ${{jobs.parse_tag.outputs.version}}
+    mark_as_deleted:
+        name: mark_as_deleted
+        runs-on: ubuntu-latest
+        steps:
+      
 
+          - name: process_version
+            run: |
+              echo ${{inputs.text}}
+          
