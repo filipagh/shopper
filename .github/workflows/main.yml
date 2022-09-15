@@ -1,20 +1,13 @@
-# This is a basic workflow to help you get started with Actions
-
-name: CI trigger
-
+name: Mark release as deleted in CRM
 on:
-  workflow_dispatch:
+    release:
+        types: [ created ]
 
-env:
-  VERSION: "1.1.1.1_1114"
+    # remove postfix from version
 
-        
 jobs:
-  aa:
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo ${VERSION}
-          echo ${VERSION%_*}
-          echo ${{env.VERSION}}
-      
+    mark_as_deleted:
+        uses: filipagh/shopper/.github/workflows/sub.yml@master
+        with:
+            version: ${{ GITHUB_REF }}
+        secrets: inherit
