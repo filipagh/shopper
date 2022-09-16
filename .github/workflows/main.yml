@@ -12,7 +12,7 @@ jobs:
         outputs:
           version: ${{ steps.process.outputs.version }}
         steps:
-          - name: proces
+          - id: process
             run: |
                 ref=${{github.ref}} 
                 tag=${ref#refs/tags/}
