@@ -10,7 +10,7 @@ on:
 env:
     REF: ${{inputs.version}}
     TAG: ${REF#refs/tags/}     # remove 'refs/tags/' in front of tag
-    VERSION: ${${{env.TAG}}%-*}                  
+    VERSION: ${{env.TAG}}                  
 
 jobs:
     mark_as_deleted:
