@@ -17,4 +17,5 @@ jobs:
           - name: process_version
             run: |
               echo ${{inputs.text}}
+              echo ${{GITHUB_REF}}
           
