@@ -17,5 +17,6 @@ jobs:
           - name: process_version
             run: |
               echo "${{inputs.version}}"
+              echo "${{github.ref}}"
 
           
