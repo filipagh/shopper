@@ -8,7 +8,7 @@ on:
                 type: string
                 
 env:
-    TAG: ${${{inputs.version}}#refs/tags/}     # remove 'refs/tags/' in front of tag
+    TAG: ${{inputs.version#refs/tags/}}     # remove 'refs/tags/' in front of tag
     VERSION: ${TAG%-*}                  
 
 jobs:
