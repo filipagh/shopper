@@ -22,6 +22,6 @@ jobs:
             run: |
               echo "${{inputs.version}}"
               echo "${{github.ref}}"
-              echo "${{env.TAG}}"
+              echo "${{env.VERSION}}"
 
           
