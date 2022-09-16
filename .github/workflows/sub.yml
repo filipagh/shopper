@@ -19,12 +19,20 @@ jobs:
                 tag=${ref#refs/tags/}
                 version=${tag%-*} 
                 echo "tt=$version" >> $GITHUB_ENV
-      
-
+    proces:
+        needs: mark_as_deleted
+        strategy:
+          fail-fast: false
+          matrix:
+            product: [ b229622b, intwkla1, ladeskcz, spinla01, qusuppla ]
+        name: proces
+        runs-on: ubuntu-latest
+        steps: 
           - name: process_version
             run: |
               echo "${{inputs.version}}"
               echo "${{github.ref}}"
               echo "${{env.tt}}"
+              echo "${{ matrix.product }}"
 
           
