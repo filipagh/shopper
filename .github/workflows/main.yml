@@ -9,5 +9,5 @@ jobs:
     mark_as_deleted:
         uses: filipagh/shopper/.github/workflows/sub.yml@master
         with:
-            version: "1111"
+            version: $github.ref"
         secrets: inherit
