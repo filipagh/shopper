@@ -17,13 +17,18 @@ jobs:
         name: mark_as_deleted
         runs-on: ubuntu-latest
         steps:
+          - name: proces
+            run: |
+                ref=${{inputs.version}} 
+                tag=${ref#refs/tags/}
+                version=${TAG%-*} 
+                echo "tt=$version" >> $GITHUB_ENV
       
 
           - name: process_version
             run: |
               echo "${{inputs.version}}"
               echo "${{github.ref}}"
-              echo "${{env.TAG}}"
-              echo "${{env.VERSION}}"
+              echo "${{env.tt}}"
 
           
