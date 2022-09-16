@@ -6,8 +6,21 @@ on:
     # remove postfix from version
 
 jobs:
+    process:
+        name: process
+        runs-on: ubuntu-latest
+        outputs:
+          version: ${{ steps.process.outputs.version }}
+        steps:
+          - name: proces
+            run: |
+                ref=${{github.ref}} 
+                tag=${ref#refs/tags/}
+                version=${tag%-*} 
+                echo "::set-output name=version::$version"
     mark_as_deleted:
+        needs: process
         uses: filipagh/shopper/.github/workflows/sub.yml@master
         with:
-            version: ${{github.ref}}
+            version: ${{needs.process.outputs.version}}
         secrets: inherit
