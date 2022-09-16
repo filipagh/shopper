@@ -3,24 +3,22 @@ on:
     release:
         types: [ created ]
 
-    # remove postfix from version
-
 jobs:
-    process:
-        name: process
+    parse_version:
+        name: parse_version
         runs-on: ubuntu-latest
         outputs:
-          version: ${{ steps.process.outputs.version }}
+          version: ${{ steps.parse_version.outputs.version }}
         steps:
-          - id: process
+          - id: parse_version
             run: |
                 ref=${{github.ref}} 
                 tag=${ref#refs/tags/}
                 version=${tag%-*} 
                 echo "::set-output name=version::$version"
     mark_as_deleted:
-        needs: process
+        needs: parse_version
         uses: filipagh/shopper/.github/workflows/sub.yml@master
         with:
-            version: ${{needs.process.outputs.version}}
+            version: ${{needs.parse_version.outputs.version}}
         secrets: inherit
