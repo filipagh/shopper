@@ -6,6 +6,10 @@ on:
             version:
                 required: true
                 type: string
+                
+env:
+    TAG: ${inputs.version#refs/tags/}     # remove 'refs/tags/' in front of tag
+    VERSION: ${TAG%-*}                  
 
 jobs:
     mark_as_deleted:
@@ -18,5 +22,6 @@ jobs:
             run: |
               echo "${{inputs.version}}"
               echo "${{github.ref}}"
+              echo "${{env.TAG}}"
 
           
