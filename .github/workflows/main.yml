@@ -1,7 +1,7 @@
 name: Mark release as deleted in CRM
 on:
     release:
-        types: [ created ]
+        types: [ deleted ]
 
 jobs:
     parse_version:
